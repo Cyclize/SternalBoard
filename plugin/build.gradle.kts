@@ -11,6 +11,7 @@ dependencies {
     api(project(":api"))
     compileOnly(libs.spigot)
     compileOnly(libs.placeholder)
+    compileOnly("net.kyori:adventure-text-minimessage:4.11.0")
 }
 
 tasks {

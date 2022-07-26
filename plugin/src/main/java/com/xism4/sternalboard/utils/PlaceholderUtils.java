@@ -2,35 +2,32 @@ package com.xism4.sternalboard.utils;
 
 import com.xism4.sternalboard.SternalBoard;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class PlaceholderUtils {
-    private static final Pattern HEX_PATTERN = Pattern.compile("#[a-fA-F0-9]{6}}");
-
     public static String sanitizeString(Player player, String text) {
         if (SternalBoard.getInstance().getServer().getPluginManager().getPlugin(
                 "PlaceholderAPI") != null) {
             return colorize(PlaceholderAPI.setPlaceholders(player, text)
             );
-        }
-        else {
+        } else {
             return colorize(text);
         }
     }
 
     public static String colorize(String text) {
-        if (Bukkit.getVersion().contains("1.16")) {
-            Matcher match = HEX_PATTERN.matcher(text);
-            while (match.find()) {
-                String color = text.substring(match.start(), match.end());
-                text = text.replace(color, ChatColor.of(color) + "");
-                match = HEX_PATTERN.matcher(text);
-            }
+        if (
+                Bukkit.getVersion().contains("1.16") ||
+                Bukkit.getVersion().contains("1.17") ||
+                Bukkit.getVersion().contains("1.18") ||
+                Bukkit.getVersion().contains("1.19")
+        ) {
+            MiniMessage mm = MiniMessage.miniMessage();
+            text = LegacyComponentSerializer.legacySection().serialize(mm.deserialize(text));
         }
         return ChatColor.translateAlternateColorCodes(
                 '&', text
